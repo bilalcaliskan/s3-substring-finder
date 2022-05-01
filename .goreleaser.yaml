@@ -1,0 +1,28 @@
+---
+project_name: s3-substring-finder
+env:
+  - CGO_ENABLED=0
+  - GOFLAGS=-mod=vendor
+  - GO111MODULE=auto
+before:
+  hooks:
+    - go mod vendor
+builds:
+  - id: binary
+    goos:
+      - linux
+      - darwin
+    goarch:
+      - amd64
+    ldflags:
+      - -s -w
+    main: ./main.go
+archives:
+  - replacements:
+      amd64: x86_64
+changelog:
+  sort: asc
+  filters:
+    exclude:
+      - '^docs:'
+      - '^test:'
