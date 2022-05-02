@@ -12,6 +12,8 @@ type S3SubstringFinderOptions struct {
 	BucketName string
 	// Region is the region of the target bucket
 	Region string
+	// Substring is the target string to find in a bucket
+	Substring string
 }
 
 // GetOreillyTrialOptions returns the pointer of OreillyTrialOptions

@@ -23,6 +23,15 @@ func init() {
 		"name of the target bucket")
 	rootCmd.PersistentFlags().StringVarP(&opts.Region, "region", "", "",
 		"region of the target bucket")
+	rootCmd.PersistentFlags().StringVarP(&opts.Substring, "substring", "", "",
+		"substring to find on target bucket")
+
+	// set required flags
+	_ = rootCmd.MarkPersistentFlagRequired("accessKey")
+	_ = rootCmd.MarkPersistentFlagRequired("secretKey")
+	_ = rootCmd.MarkPersistentFlagRequired("bucketName")
+	_ = rootCmd.MarkPersistentFlagRequired("region")
+	_ = rootCmd.MarkPersistentFlagRequired("substring")
 }
 
 // rootCmd represents the base command when called without any subcommands
@@ -32,7 +41,6 @@ var rootCmd = &cobra.Command{
 	Long:  `This tool searches the specific substring in files on AWS S3 and returns the file names`,
 	Run: func(cmd *cobra.Command, args []string) {
 		opts := options.GetS3SubstringFinderOptions()
-
 		if err := aws.Find(opts); err != nil {
 			logging.GetLogger().Fatal("fatal error occured", zap.String("error", err.Error()))
 		}
