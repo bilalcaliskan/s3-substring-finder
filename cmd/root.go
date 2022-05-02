@@ -42,7 +42,7 @@ var rootCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		opts := options.GetS3SubstringFinderOptions()
 		if err := aws.Find(opts); err != nil {
-			logging.GetLogger().Fatal("fatal error occured", zap.String("error", err.Error()))
+			logging.GetLogger().Fatal("fatal error occured", zap.Error(err))
 		}
 	},
 }
