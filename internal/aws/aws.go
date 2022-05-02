@@ -35,14 +35,14 @@ func Find(opts *options.S3SubstringFinderOptions) error {
 	logger.Info("session successfully obtained")
 
 	svc := s3.New(sess)
-	result, err := svc.ListObjects(&s3.ListObjectsInput{
+	listResult, err := svc.ListObjects(&s3.ListObjectsInput{
 		Bucket: aws.String(opts.BucketName),
 	})
 	if err != nil {
 		return err
 	}
 
-	for _, v := range result.Contents {
+	for _, v := range listResult.Contents {
 		if strings.Contains(*v.Key, "txt") {
 			// logger.Info("adding object to the txtChan", zap.String("key", *v.Key))
 			// txtChan <- v
@@ -52,7 +52,7 @@ func Find(opts *options.S3SubstringFinderOptions) error {
 	}
 
 	for _, v := range txtSlice {
-		result, err := svc.GetObject(&s3.GetObjectInput{
+		getResult, err := svc.GetObject(&s3.GetObjectInput{
 			Bucket: aws.String(opts.BucketName),
 			Key:    v.Key,
 		})
@@ -61,7 +61,7 @@ func Find(opts *options.S3SubstringFinderOptions) error {
 		}
 
 		buf := new(bytes.Buffer)
-		if _, err := buf.ReadFrom(result.Body); err != nil {
+		if _, err := buf.ReadFrom(getResult.Body); err != nil {
 			return err
 		}
 
@@ -69,7 +69,7 @@ func Find(opts *options.S3SubstringFinderOptions) error {
 			logger.Info("match!", zap.String("key", *v.Key))
 		}
 
-		if err := result.Body.Close(); err != nil {
+		if err := getResult.Body.Close(); err != nil {
 			panic(err)
 		}
 	}
