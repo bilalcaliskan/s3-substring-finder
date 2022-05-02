@@ -2,77 +2,89 @@ package aws
 
 import (
 	"bytes"
-	"s3-substring-finder/internal/logging"
 	"s3-substring-finder/internal/options"
 	"strings"
+	"sync"
 
 	"github.com/aws/aws-sdk-go/aws/credentials"
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/s3"
-	"go.uber.org/zap"
+
+	"github.com/schollz/progressbar/v3"
 )
 
-var logger *zap.Logger
-
-func init() {
-	logger = logging.GetLogger()
-}
-
 // Find does the heavy lifting, communicates with the S3 and finds the files
-func Find(opts *options.S3SubstringFinderOptions) error {
-	// txtChan := make(chan *s3.Object)
-	var txtSlice []*s3.Object
+func Find(opts *options.S3SubstringFinderOptions) ([]string, []error) {
+	var errors []error
+	var matchedFiles []string
 
+	// initialize session with provided credentials
 	sess, err := session.NewSession(&aws.Config{
 		Region:      aws.String(opts.Region),
 		Credentials: credentials.NewStaticCredentials(opts.AccessKey, opts.SecretKey, ""),
 	})
 	if err != nil {
-		return err
+		errors = append(errors, err)
+		return matchedFiles, errors
 	}
-	logger.Info("session successfully obtained")
 
+	// obtain S3 client with initialized session
 	svc := s3.New(sess)
+
+	// fetch all the objects in target bucket
 	listResult, err := svc.ListObjects(&s3.ListObjectsInput{
 		Bucket: aws.String(opts.BucketName),
 	})
 	if err != nil {
-		return err
+		errors = append(errors, err)
+		return matchedFiles, errors
 	}
 
+	var txtArr []*s3.Object
+	var wg sync.WaitGroup
+
+	// separate the txt files from all of the fetched objects from bucket
 	for _, v := range listResult.Contents {
-		if strings.Contains(*v.Key, "txt") {
-			// logger.Info("adding object to the txtChan", zap.String("key", *v.Key))
-			// txtChan <- v
-			logger.Info("adding object to the txtSlice", zap.String("key", *v.Key))
-			txtSlice = append(txtSlice, v)
+		if strings.HasSuffix(*v.Key, "txt") {
+			txtArr = append(txtArr, v)
 		}
 	}
 
-	for _, v := range txtSlice {
-		getResult, err := svc.GetObject(&s3.GetObjectInput{
-			Bucket: aws.String(opts.BucketName),
-			Key:    v.Key,
-		})
-		if err != nil {
-			return err
-		}
+	bar := progressbar.Default(int64(len(txtArr)))
+	// check each txt file individually if it contains provided substring
+	for _, obj := range txtArr {
+		wg.Add(1)
+		go func(obj *s3.Object, wg *sync.WaitGroup) {
+			defer wg.Done()
+			getResult, err := svc.GetObject(&s3.GetObjectInput{
+				Bucket: aws.String(opts.BucketName),
+				Key:    obj.Key,
+			})
+			if err != nil {
+				errors = append(errors, err)
+			}
 
-		buf := new(bytes.Buffer)
-		if _, err := buf.ReadFrom(getResult.Body); err != nil {
-			return err
-		}
+			buf := new(bytes.Buffer)
+			if _, err := buf.ReadFrom(getResult.Body); err != nil {
+				errors = append(errors, err)
+			}
 
-		if strings.Contains(buf.String(), opts.Substring) {
-			logger.Info("match!", zap.String("key", *v.Key))
-		}
+			if strings.Contains(buf.String(), opts.Substring) {
+				matchedFiles = append(matchedFiles, *obj.Key)
+			}
 
-		if err := getResult.Body.Close(); err != nil {
-			panic(err)
-		}
+			if err := getResult.Body.Close(); err != nil {
+				panic(err)
+			}
+
+			_ = bar.Add(1)
+		}(obj, &wg)
 	}
 
-	return nil
+	// wait for all the goroutines to complete
+	wg.Wait()
+
+	return matchedFiles, errors
 }
