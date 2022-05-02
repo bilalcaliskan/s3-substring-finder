@@ -13,7 +13,10 @@ import (
 	"go.uber.org/zap"
 )
 
+var logger *zap.Logger
+
 func init() {
+	logger = logging.GetLogger()
 	opts := options.GetS3SubstringFinderOptions()
 	rootCmd.PersistentFlags().StringVarP(&opts.AccessKey, "accessKey", "", "",
 		"access key to access S3")
@@ -41,9 +44,11 @@ var rootCmd = &cobra.Command{
 	Long:  `This tool searches the specific substring in files on AWS S3 and returns the file names`,
 	Run: func(cmd *cobra.Command, args []string) {
 		opts := options.GetS3SubstringFinderOptions()
-		if err := aws.Find(opts); err != nil {
-			logging.GetLogger().Fatal("fatal error occured", zap.Error(err))
+		matchedFiles, errors := aws.Find(opts)
+		if len(errors) != 0 {
+			logger.Fatal("fatal error occured", zap.Errors("errors", errors))
 		}
+		logger.Info("fetched matched files", zap.Any("matchedFiles", matchedFiles))
 	},
 }
 
