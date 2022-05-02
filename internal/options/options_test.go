@@ -6,7 +6,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-// TestGetOreillyTrialOptions function tests if GetOreillyTrialOptions function running properly
+// TestGetS3SubstringFinderOptions function tests if GetS3SubstringFinderOptions function running properly
 func TestGetS3SubstringFinderOptions(t *testing.T) {
 	t.Log("fetching default options.S3SubstringFinderOptions")
 	opts := GetS3SubstringFinderOptions()
