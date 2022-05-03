@@ -1,14 +1,11 @@
 package cmd
 
 import (
-	"io/ioutil"
 	"os"
 	"s3-substring-finder/internal/aws"
 	"s3-substring-finder/internal/logging"
 	"s3-substring-finder/internal/options"
-	"strings"
 
-	"github.com/dimiro1/banner"
 	"github.com/spf13/cobra"
 	"go.uber.org/zap"
 )
@@ -55,9 +52,6 @@ var rootCmd = &cobra.Command{
 // Execute adds all child commands to the root command and sets flags appropriately.
 // This is called by main.main(). It only needs to happen once to the rootCmd.
 func Execute() {
-	bannerBytes, _ := ioutil.ReadFile("banner.txt")
-	banner.Init(os.Stdout, true, false, strings.NewReader(string(bannerBytes)))
-
 	err := rootCmd.Execute()
 	if err != nil {
 		os.Exit(1)
