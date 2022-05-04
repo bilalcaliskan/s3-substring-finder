@@ -13,7 +13,7 @@ ineffassign:
 	ineffassign ./...
 
 test:
-	go test ./...
+	go test ./... -race
 
 build:
 	go build -o bin/main main.go
