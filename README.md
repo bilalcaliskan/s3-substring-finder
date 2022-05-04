@@ -9,5 +9,35 @@
 [![Release](https://img.shields.io/github/release/bilalcaliskan/s3-substring-finder.svg)](https://github.com/bilalcaliskan/s3-substring-finder/releases/latest)
 [![Go version](https://img.shields.io/github/go-mod/go-version/bilalcaliskan/s3-substring-finder)](https://github.com/bilalcaliskan/s3-substring-finder)
 
+This tool gets the **AWS S3** credentials from user as input and also gets a specific substring to search across the **txt files** in a bucket.
+Then prints the file names that contains provided substring.
 
-**TBD**
+## Usage
+Binary can be downloaded from [Releases](https://github.com/bilalcaliskan/s3-substring-finder/releases) page.
+
+After then, you can simply run binary by providing required command line arguments:
+```shell
+$ ./s3-substring-finder --accessKey asdasfasfasfasfasfas --secretKey asdasfasfasfasfasfas --bucketName demo-bucket --region us-east-2 --substring "catch me if you can"
+```
+
+## Configuration
+This tool provides below command line arguments:
+```
+      --bucketName string   name of the target bucket on S3
+      --accessKey string    access key credential to access S3 bucket
+  -h, --help                help for s3-substring-finder
+      --region string       region of the target bucket on S3
+      --secretKey string    secret key credential to access S3 bucket
+      --substring string    substring to find on txt files on target bucket
+```
+
+## Development
+This project requires below tools while developing:
+- [Golang 1.17](https://golang.org/doc/go1.17)
+- [pre-commit](https://pre-commit.com/)
+- [golangci-lint](https://golangci-lint.run/usage/install/) - required by [pre-commit](https://pre-commit.com/)
+
+After you installed [pre-commit](https://pre-commit.com/), simply run below command to prepare your development environment:
+```shell
+$ pre-commit install
+```
