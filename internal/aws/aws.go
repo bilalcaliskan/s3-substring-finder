@@ -6,32 +6,19 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/aws/aws-sdk-go/aws/credentials"
+	"github.com/aws/aws-sdk-go/service/s3/s3iface"
 
 	"github.com/aws/aws-sdk-go/aws"
-	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/s3"
 
 	"github.com/schollz/progressbar/v3"
 )
 
 // Find does the heavy lifting, communicates with the S3 and finds the files
-func Find(opts *options.S3SubstringFinderOptions) ([]string, []error) {
+func Find(svc s3iface.S3API, opts *options.S3SubstringFinderOptions) ([]string, []error) {
 	var errors []error
 	var matchedFiles []string
-
-	// initialize session with provided credentials
-	sess, err := session.NewSession(&aws.Config{
-		Region:      aws.String(opts.Region),
-		Credentials: credentials.NewStaticCredentials(opts.AccessKey, opts.SecretKey, ""),
-	})
-	if err != nil {
-		errors = append(errors, err)
-		return matchedFiles, errors
-	}
-
-	// obtain S3 client with initialized session
-	svc := s3.New(sess)
+	mu := &sync.Mutex{}
 
 	// fetch all the objects in target bucket
 	listResult, err := svc.ListObjects(&s3.ListObjectsInput{
@@ -62,6 +49,7 @@ func Find(opts *options.S3SubstringFinderOptions) ([]string, []error) {
 				Bucket: aws.String(opts.BucketName),
 				Key:    obj.Key,
 			})
+
 			if err != nil {
 				errors = append(errors, err)
 			}
@@ -72,7 +60,9 @@ func Find(opts *options.S3SubstringFinderOptions) ([]string, []error) {
 			}
 
 			if strings.Contains(buf.String(), opts.Substring) {
+				mu.Lock()
 				matchedFiles = append(matchedFiles, *obj.Key)
+				mu.Unlock()
 			}
 
 			if err := getResult.Body.Close(); err != nil {

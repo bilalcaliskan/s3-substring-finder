@@ -6,6 +6,8 @@ import (
 	"s3-substring-finder/internal/logging"
 	"s3-substring-finder/internal/options"
 
+	"github.com/aws/aws-sdk-go/service/s3"
+
 	"github.com/spf13/cobra"
 	"go.uber.org/zap"
 )
@@ -41,10 +43,19 @@ var rootCmd = &cobra.Command{
 	Long:  `This tool searches the specific substring in files on AWS S3 and returns the file names`,
 	Run: func(cmd *cobra.Command, args []string) {
 		opts := options.GetS3SubstringFinderOptions()
-		matchedFiles, errors := aws.Find(opts)
+		sess, err := aws.CreateSession(opts)
+		if err != nil {
+			logger.Fatal("fatal error occured", zap.Error(err))
+		}
+
+		// obtain S3 client with initialized session
+		svc := s3.New(sess)
+
+		matchedFiles, errors := aws.Find(svc, opts)
 		if len(errors) != 0 {
 			logger.Fatal("fatal error occured", zap.Errors("errors", errors))
 		}
+
 		logger.Info("fetched matched files", zap.Any("matchedFiles", matchedFiles))
 	},
 }
