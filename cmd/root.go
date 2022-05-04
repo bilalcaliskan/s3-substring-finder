@@ -45,7 +45,7 @@ var rootCmd = &cobra.Command{
 		opts := options.GetS3SubstringFinderOptions()
 		sess, err := aws.CreateSession(opts)
 		if err != nil {
-			logger.Fatal("fatal error occured", zap.Error(err))
+			logger.Fatal("fatal error occurred", zap.Error(err))
 		}
 
 		// obtain S3 client with initialized session
@@ -53,10 +53,19 @@ var rootCmd = &cobra.Command{
 
 		matchedFiles, errors := aws.Find(svc, opts)
 		if len(errors) != 0 {
-			logger.Fatal("fatal error occured", zap.Errors("errors", errors))
+			logger.Fatal("fatal error occurred", zap.Errors("errors", errors))
 		}
 
-		logger.Info("fetched matched files", zap.Any("matchedFiles", matchedFiles))
+		if len(matchedFiles) == 0 {
+			logger.Info("no matched files on the bucket", zap.Any("matchedFiles", matchedFiles),
+				zap.String("bucket", opts.BucketName), zap.String("region", opts.Region),
+				zap.String("substring", opts.Substring))
+			return
+		}
+
+		logger.Info("fetched matched files", zap.Any("matchedFiles", matchedFiles),
+			zap.String("bucket", opts.BucketName), zap.String("region", opts.Region),
+			zap.String("substring", opts.Substring))
 	},
 }
 
