@@ -56,7 +56,16 @@ var rootCmd = &cobra.Command{
 			logger.Fatal("fatal error occurred", zap.Errors("errors", errors))
 		}
 
-		logger.Info("fetched matched files", zap.Any("matchedFiles", matchedFiles))
+		if len(matchedFiles) == 0 {
+			logger.Info("no matched files on the bucket", zap.Any("matchedFiles", matchedFiles),
+				zap.String("bucket", opts.BucketName), zap.String("region", opts.Region),
+				zap.String("substring", opts.Substring))
+			return
+		}
+
+		logger.Info("fetched matched files", zap.Any("matchedFiles", matchedFiles),
+			zap.String("bucket", opts.BucketName), zap.String("region", opts.Region),
+			zap.String("substring", opts.Substring))
 	},
 }
 
