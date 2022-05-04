@@ -17,16 +17,16 @@ var logger *zap.Logger
 func init() {
 	logger = logging.GetLogger()
 	opts := options.GetS3SubstringFinderOptions()
-	rootCmd.PersistentFlags().StringVarP(&opts.AccessKey, "accessKey", "", "",
-		"access key to access S3")
-	rootCmd.PersistentFlags().StringVarP(&opts.SecretKey, "secretKey", "", "",
-		"secret key to access S3")
 	rootCmd.PersistentFlags().StringVarP(&opts.BucketName, "bucketName", "", "",
-		"name of the target bucket")
+		"name of the target bucket on S3")
+	rootCmd.PersistentFlags().StringVarP(&opts.AccessKey, "accessKey", "", "",
+		"access key credential to access S3 bucket")
+	rootCmd.PersistentFlags().StringVarP(&opts.SecretKey, "secretKey", "", "",
+		"secret key credential to access S3 bucket")
 	rootCmd.PersistentFlags().StringVarP(&opts.Region, "region", "", "",
-		"region of the target bucket")
+		"region of the target bucket on S3")
 	rootCmd.PersistentFlags().StringVarP(&opts.Substring, "substring", "", "",
-		"substring to find on target bucket")
+		"substring to find on txt files on target bucket")
 
 	// set required flags
 	_ = rootCmd.MarkPersistentFlagRequired("accessKey")
