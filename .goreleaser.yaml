@@ -28,5 +28,6 @@ changelog:
       - '^test:'
       - '^ci:'
       - '^build:'
+      - '^style:'
       - '^Merge branch'
       - '^Merge pull request'
