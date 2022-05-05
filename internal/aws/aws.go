@@ -67,10 +67,7 @@ func Find(svc s3iface.S3API, opts *options.S3SubstringFinderOptions) ([]string, 
 				mu.Unlock()
 			}
 
-			if err := getResult.Body.Close(); err != nil {
-				errors = append(errors, err)
-				return
-			}
+			defer getResult.Body.Close()
 
 			_ = bar.Add(1)
 		}(obj, &wg)
