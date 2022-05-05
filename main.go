@@ -16,6 +16,5 @@ import (
 func main() {
 	bannerBytes, _ := ioutil.ReadFile("banner.txt")
 	banner.Init(os.Stdout, true, false, strings.NewReader(string(bannerBytes)))
-
 	cmd.Execute()
 }

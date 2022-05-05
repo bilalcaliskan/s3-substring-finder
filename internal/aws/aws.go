@@ -52,11 +52,13 @@ func Find(svc s3iface.S3API, opts *options.S3SubstringFinderOptions) ([]string, 
 
 			if err != nil {
 				errors = append(errors, err)
+				return
 			}
 
 			buf := new(bytes.Buffer)
 			if _, err := buf.ReadFrom(getResult.Body); err != nil {
 				errors = append(errors, err)
+				return
 			}
 
 			if strings.Contains(buf.String(), opts.Substring) {
@@ -65,9 +67,7 @@ func Find(svc s3iface.S3API, opts *options.S3SubstringFinderOptions) ([]string, 
 				mu.Unlock()
 			}
 
-			if err := getResult.Body.Close(); err != nil {
-				panic(err)
-			}
+			defer getResult.Body.Close()
 
 			_ = bar.Add(1)
 		}(obj, &wg)
