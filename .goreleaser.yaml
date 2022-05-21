@@ -1,12 +1,15 @@
 ---
 project_name: s3-substring-finder
+
 env:
   - CGO_ENABLED=0
-  - GOFLAGS=-mod=vendor
   - GO111MODULE=auto
+
 before:
   hooks:
-    - go mod vendor
+    - go mod tidy
+    - go mod download
+
 builds:
   - id: binary
     goos:
@@ -14,12 +17,20 @@ builds:
       - darwin
     goarch:
       - amd64
+    binary: s3-substring-finder
     ldflags:
-      - -s -w
+      - -s -w -X github.com/bilalcaliskan/s3-substring-finder/cmd.GitVersion={{ .Version }} -X github.com/bilalcaliskan/s3-substring-finder/cmd.gitCommit={{ .ShortCommit }}  -X github.com/bilalcaliskan/s3-substring-finder/cmd.buildDate={{ .CommitDate }}
     main: ./main.go
+
 archives:
   - replacements:
       amd64: x86_64
+
+release:
+  github:
+    owner: bilalcaliskan
+    name: s3-substring-finder
+
 changelog:
   sort: asc
   filters:
@@ -28,6 +39,6 @@ changelog:
       - '^test:'
       - '^ci:'
       - '^build:'
-      - '^style:'
+      - 'README'
       - '^Merge branch'
       - '^Merge pull request'
