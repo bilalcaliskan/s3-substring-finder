@@ -3,11 +3,11 @@ module s3-substring-finder
 go 1.17
 
 require (
-	github.com/aws/aws-sdk-go v1.44.33
+	github.com/aws/aws-sdk-go v1.44.38
 	github.com/dimiro1/banner v1.1.0
 	github.com/schollz/progressbar/v3 v3.8.6
 	github.com/spf13/cobra v1.4.0
-	github.com/stretchr/testify v1.7.2
+	github.com/stretchr/testify v1.7.4
 	go.uber.org/zap v1.21.0
 )
 
