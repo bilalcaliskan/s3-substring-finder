@@ -22,6 +22,18 @@ builds:
       - -s -w -X github.com/bilalcaliskan/s3-substring-finder/cmd.GitVersion={{ .Version }} -X github.com/bilalcaliskan/s3-substring-finder/cmd.gitCommit={{ .ShortCommit }}  -X github.com/bilalcaliskan/s3-substring-finder/cmd.buildDate={{ .CommitDate }}
     main: ./main.go
 
+brews:
+  - name: s3-substring-finder
+    tap:
+      owner: bilalcaliskan
+      name: homebrew-tap
+      token: "{{ .Env.TAP_GITHUB_TOKEN }}"
+    folder: Formula
+    goarm: 6
+    homepage: https://github.com/bilalcaliskan/s3-substring-finder
+    license: apache-2.0
+    description: s3-substring-finder accesses to S3 buckets and finds txt files which contains specific substring
+
 archives:
   - replacements:
       amd64: x86_64
@@ -39,6 +51,7 @@ changelog:
       - '^test:'
       - '^ci:'
       - '^build:'
+      - '^style:'
       - 'README'
       - '^Merge branch'
       - '^Merge pull request'
