@@ -7,7 +7,7 @@ require (
 	github.com/dimiro1/banner v1.1.0
 	github.com/schollz/progressbar/v3 v3.8.6
 	github.com/spf13/cobra v1.5.0
-	github.com/stretchr/testify v1.7.4
+	github.com/stretchr/testify v1.7.5
 	go.uber.org/zap v1.21.0
 )
 
