@@ -10,7 +10,7 @@
 [![Go version](https://img.shields.io/github/go-mod/go-version/bilalcaliskan/s3-substring-finder)](https://github.com/bilalcaliskan/s3-substring-finder)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
-This tool gets the **AWS S3** credentials from user as input and also gets a specific substring to search across the **txt files** in a bucket.
+This tool gets the **AWS S3** credentials from user as input and also gets a specific substring to search across the files with specified extensions with **--fileExtensions** flag in a bucket.
 Then prints the file names that contains provided substring.
 
 ## Usage
@@ -24,12 +24,14 @@ $ ./s3-substring-finder --accessKey asdasfasfasfasfasfas --secretKey asdasfasfas
 ## Configuration
 This tool provides below command line arguments:
 ```
-      --bucketName string   name of the target bucket on S3
-      --accessKey string    access key credential to access S3 bucket
-  -h, --help                help for s3-substring-finder
-      --region string       region of the target bucket on S3
-      --secretKey string    secret key credential to access S3 bucket
-      --substring string    substring to find on txt files on target bucket
+Flags:
+      --accessKey string        access key credential to access S3 bucket (default "")
+      --bucketName string       name of the target bucket on S3 (default "")
+      --fileExtensions string   comma separated list of file extensions to search on S3 bucket (ex: txt,json) (default "txt")
+  -h, --help                    help for s3-substring-finder
+      --region string           region of the target bucket on S3 (default "")
+      --secretKey string        secret key credential to access S3 bucket (default "")
+      --substring string        substring to find on txt files on target bucket (default "")
 ```
 
 ## Development
@@ -41,7 +43,7 @@ This project requires below tools while developing:
 
 After you installed [pre-commit](https://pre-commit.com/), simply run below command to prepare your development environment:
 ```shell
-$ pre-commit install
+$ pre-commit install -c build/ci/.pre-commit-config.yaml
 ```
 
 ## License

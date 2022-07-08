@@ -18,15 +18,17 @@ func init() {
 	logger = logging.GetLogger()
 	opts := options.GetS3SubstringFinderOptions()
 	rootCmd.PersistentFlags().StringVarP(&opts.BucketName, "bucketName", "", "",
-		"name of the target bucket on S3")
+		"name of the target bucket on S3 (default \"\")")
 	rootCmd.PersistentFlags().StringVarP(&opts.AccessKey, "accessKey", "", "",
-		"access key credential to access S3 bucket")
+		"access key credential to access S3 bucket (default \"\")")
 	rootCmd.PersistentFlags().StringVarP(&opts.SecretKey, "secretKey", "", "",
-		"secret key credential to access S3 bucket")
+		"secret key credential to access S3 bucket (default \"\")")
 	rootCmd.PersistentFlags().StringVarP(&opts.Region, "region", "", "",
-		"region of the target bucket on S3")
+		"region of the target bucket on S3 (default \"\")")
 	rootCmd.PersistentFlags().StringVarP(&opts.Substring, "substring", "", "",
-		"substring to find on txt files on target bucket")
+		"substring to find on txt files on target bucket (default \"\")")
+	rootCmd.PersistentFlags().StringVarP(&opts.FileExtensions, "fileExtensions", "", "txt",
+		"comma separated list of file extensions to search on S3 bucket (ex: txt,json)")
 
 	// set required flags
 	_ = rootCmd.MarkPersistentFlagRequired("accessKey")
