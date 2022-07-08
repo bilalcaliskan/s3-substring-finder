@@ -27,6 +27,8 @@ func init() {
 		"region of the target bucket on S3")
 	rootCmd.PersistentFlags().StringVarP(&opts.Substring, "substring", "", "",
 		"substring to find on txt files on target bucket")
+	rootCmd.PersistentFlags().StringVarP(&opts.FileExtensions, "fileExtensions", "", "txt",
+		"comma separated list of file extensions to search on S3 bucket (txt, json etc)")
 
 	// set required flags
 	_ = rootCmd.MarkPersistentFlagRequired("accessKey")

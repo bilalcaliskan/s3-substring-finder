@@ -14,6 +14,8 @@ type S3SubstringFinderOptions struct {
 	Region string
 	// Substring is the target string to find in a bucket
 	Substring string
+	// FileExtensions is a comma separated list of file extensions to search on S3 bucket (txt, json etc)
+	FileExtensions string
 }
 
 // GetS3SubstringFinderOptions returns the pointer of S3SubstringFinderOptions

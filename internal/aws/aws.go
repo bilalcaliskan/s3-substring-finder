@@ -2,9 +2,12 @@ package aws
 
 import (
 	"bytes"
+	"s3-substring-finder/internal/logging"
 	"s3-substring-finder/internal/options"
 	"strings"
 	"sync"
+
+	"go.uber.org/zap"
 
 	"github.com/aws/aws-sdk-go/service/s3/s3iface"
 
@@ -29,19 +32,24 @@ func Find(svc s3iface.S3API, opts *options.S3SubstringFinderOptions) ([]string, 
 		return matchedFiles, errors
 	}
 
-	var txtArr []*s3.Object
+	var resultArr []*s3.Object
 	var wg sync.WaitGroup
+
+	extensions := strings.Split(opts.FileExtensions, ",")
 
 	// separate the txt files from all of the fetched objects from bucket
 	for _, v := range listResult.Contents {
-		if strings.HasSuffix(*v.Key, "txt") {
-			txtArr = append(txtArr, v)
+		for _, y := range extensions {
+			if strings.HasSuffix(*v.Key, y) {
+				logging.GetLogger().Info("found file", zap.String("name", *v.Key))
+				resultArr = append(resultArr, v)
+			}
 		}
 	}
 
-	bar := progressbar.Default(int64(len(txtArr)))
+	bar := progressbar.Default(int64(len(resultArr)))
 	// check each txt file individually if it contains provided substring
-	for _, obj := range txtArr {
+	for _, obj := range resultArr {
 		wg.Add(1)
 		go func(obj *s3.Object, wg *sync.WaitGroup) {
 			defer wg.Done()
@@ -67,7 +75,11 @@ func Find(svc s3iface.S3API, opts *options.S3SubstringFinderOptions) ([]string, 
 				mu.Unlock()
 			}
 
-			defer getResult.Body.Close()
+			defer func() {
+				if err := getResult.Body.Close(); err != nil {
+					panic(err)
+				}
+			}()
 
 			_ = bar.Add(1)
 		}(obj, &wg)
