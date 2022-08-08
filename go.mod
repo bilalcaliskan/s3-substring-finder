@@ -8,7 +8,7 @@ require (
 	github.com/schollz/progressbar/v3 v3.9.0
 	github.com/spf13/cobra v1.5.0
 	github.com/stretchr/testify v1.8.0
-	go.uber.org/zap v1.21.0
+	go.uber.org/zap v1.22.0
 )
 
 require (
