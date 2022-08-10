@@ -1,4 +1,4 @@
-module s3-substring-finder
+module github.com/bilalcaliskan/s3-substring-finder
 
 go 1.17
 

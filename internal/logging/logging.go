@@ -7,9 +7,14 @@ import (
 	"go.uber.org/zap/zapcore"
 )
 
-var logger *zap.Logger
+var (
+	logger *zap.Logger
+	Atomic zap.AtomicLevel
+)
 
 func init() {
+	Atomic = zap.NewAtomicLevel()
+	Atomic.SetLevel(zap.InfoLevel)
 	logger = zap.New(zapcore.NewTee(zapcore.NewCore(zapcore.NewJSONEncoder(zapcore.EncoderConfig{
 		MessageKey:   "message",
 		LevelKey:     "severity",
@@ -18,7 +23,7 @@ func init() {
 		EncodeTime:   zapcore.RFC3339TimeEncoder,
 		CallerKey:    "caller",
 		EncodeCaller: zapcore.FullCallerEncoder,
-	}), zapcore.Lock(os.Stdout), zap.InfoLevel)))
+	}), zapcore.Lock(os.Stdout), Atomic)))
 }
 
 // GetLogger returns the shared *zap.Logger
