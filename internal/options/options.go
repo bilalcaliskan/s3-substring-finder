@@ -16,6 +16,8 @@ type S3SubstringFinderOptions struct {
 	Substring string
 	// FileExtensions is a comma separated list of file extensions to search on S3 bucket (txt, json etc)
 	FileExtensions string
+	// VerboseLog is the verbosity of the logging library
+	VerboseLog bool
 }
 
 // GetS3SubstringFinderOptions returns the pointer of S3SubstringFinderOptions

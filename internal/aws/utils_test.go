@@ -1,9 +1,9 @@
 package aws
 
 import (
-	"s3-substring-finder/internal/options"
 	"testing"
 
+	"github.com/bilalcaliskan/s3-substring-finder/internal/options"
 	"github.com/stretchr/testify/assert"
 )
 
