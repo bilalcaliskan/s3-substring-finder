@@ -2,49 +2,58 @@ package cmd
 
 import (
 	"os"
-	"s3-substring-finder/internal/aws"
-	"s3-substring-finder/internal/logging"
-	"s3-substring-finder/internal/options"
 
 	"github.com/aws/aws-sdk-go/service/s3"
-
+	"github.com/bilalcaliskan/s3-substring-finder/internal/aws"
+	"github.com/bilalcaliskan/s3-substring-finder/internal/logging"
+	"github.com/bilalcaliskan/s3-substring-finder/internal/options"
 	"github.com/spf13/cobra"
 	"go.uber.org/zap"
 )
 
-var logger *zap.Logger
+var (
+	opts       *options.S3SubstringFinderOptions
+	logger     *zap.Logger
+	GitVersion string
+)
 
 func init() {
+	opts = options.GetS3SubstringFinderOptions()
 	logger = logging.GetLogger()
-	opts := options.GetS3SubstringFinderOptions()
-	rootCmd.PersistentFlags().StringVarP(&opts.BucketName, "bucketName", "", "",
+	rootCmd.Flags().StringVarP(&opts.BucketName, "bucketName", "", "",
 		"name of the target bucket on S3 (default \"\")")
-	rootCmd.PersistentFlags().StringVarP(&opts.AccessKey, "accessKey", "", "",
+	rootCmd.Flags().StringVarP(&opts.AccessKey, "accessKey", "", "",
 		"access key credential to access S3 bucket (default \"\")")
-	rootCmd.PersistentFlags().StringVarP(&opts.SecretKey, "secretKey", "", "",
+	rootCmd.Flags().StringVarP(&opts.SecretKey, "secretKey", "", "",
 		"secret key credential to access S3 bucket (default \"\")")
-	rootCmd.PersistentFlags().StringVarP(&opts.Region, "region", "", "",
+	rootCmd.Flags().StringVarP(&opts.Region, "region", "", "",
 		"region of the target bucket on S3 (default \"\")")
-	rootCmd.PersistentFlags().StringVarP(&opts.Substring, "substring", "", "",
+	rootCmd.Flags().StringVarP(&opts.Substring, "substring", "", "",
 		"substring to find on txt files on target bucket (default \"\")")
-	rootCmd.PersistentFlags().StringVarP(&opts.FileExtensions, "fileExtensions", "", "txt",
-		"comma separated list of file extensions to search on S3 bucket (ex: txt,json)")
+	rootCmd.Flags().StringVarP(&opts.FileExtensions, "fileExtensions", "", "txt",
+		"comma separated list of file extensions to search on S3 bucket")
+	rootCmd.Flags().BoolVarP(&opts.VerboseLog, "verbose", "v", false,
+		"verbose output of the logging library (default false)")
 
-	// set required flags
-	_ = rootCmd.MarkPersistentFlagRequired("accessKey")
-	_ = rootCmd.MarkPersistentFlagRequired("secretKey")
-	_ = rootCmd.MarkPersistentFlagRequired("bucketName")
-	_ = rootCmd.MarkPersistentFlagRequired("region")
-	_ = rootCmd.MarkPersistentFlagRequired("substring")
+	// set required flags as required
+	_ = rootCmd.MarkFlagRequired("accessKey")
+	_ = rootCmd.MarkFlagRequired("secretKey")
+	_ = rootCmd.MarkFlagRequired("bucketName")
+	_ = rootCmd.MarkFlagRequired("substring")
+	_ = rootCmd.MarkFlagRequired("region")
 }
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
-	Use:   "s3-substring-finder",
-	Short: "Substring finder in files on a S3 bucket",
-	Long:  `This tool searches the specific substring in files on AWS S3 and returns the file names`,
+	Use:     "s3-substring-finder",
+	Short:   "Substring finder in files on a S3 bucket",
+	Version: GitVersion,
+	Long:    `This tool searches the specific substring in files on AWS S3 and returns the file names`,
 	Run: func(cmd *cobra.Command, args []string) {
-		opts := options.GetS3SubstringFinderOptions()
+		if opts.VerboseLog {
+			logging.Atomic.SetLevel(zap.DebugLevel)
+		}
+
 		sess, err := aws.CreateSession(opts)
 		if err != nil {
 			logger.Fatal("fatal error occurred", zap.Error(err))
@@ -53,6 +62,8 @@ var rootCmd = &cobra.Command{
 		// obtain S3 client with initialized session
 		svc := s3.New(sess)
 
+		logger.Debug("trying to find files on bucket", zap.String("fileExtensions", opts.FileExtensions),
+			zap.String("bucketName", opts.BucketName), zap.String("region", opts.Region))
 		matchedFiles, errors := aws.Find(svc, opts)
 		if len(errors) != 0 {
 			logger.Fatal("fatal error occurred", zap.Errors("errors", errors))

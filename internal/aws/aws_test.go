@@ -2,12 +2,12 @@ package aws
 
 import (
 	"os"
-	"s3-substring-finder/internal/options"
 	"testing"
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/service/s3"
 	"github.com/aws/aws-sdk-go/service/s3/s3iface"
+	"github.com/bilalcaliskan/s3-substring-finder/internal/options"
 	"github.com/stretchr/testify/assert"
 )
 
