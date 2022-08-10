@@ -13,7 +13,22 @@
 This tool gets the **AWS S3** credentials from user as input and also gets a specific substring to search across the files with specified extensions with **--fileExtensions** flag in a bucket.
 Then prints the file names that contains provided substring.
 
-## Usage
+## Configuration
+This tool provides below command line arguments:
+```
+Flags:
+      --accessKey string        access key credential to access S3 bucket (default "")
+      --bucketName string       name of the target bucket on S3 (default "")
+      --fileExtensions string   comma separated list of file extensions to search on S3 bucket (default "txt")
+  -h, --help                    help for s3-substring-finder
+      --region string           region of the target bucket on S3 (default "")
+      --secretKey string        secret key credential to access S3 bucket (default "")
+      --substring string        substring to find on txt files on target bucket (default "")
+  -v, --verbose                 verbose output of the logging library (default false)
+```
+
+## Installation
+### Binary
 Binary can be downloaded from [Releases](https://github.com/bilalcaliskan/s3-substring-finder/releases) page.
 
 After then, you can simply run binary by providing required command line arguments:
@@ -21,17 +36,16 @@ After then, you can simply run binary by providing required command line argumen
 $ ./s3-substring-finder --accessKey asdasfasfasfasfasfas --secretKey asdasfasfasfasfasfas --bucketName demo-bucket --region us-east-2 --substring "catch me if you can"
 ```
 
-## Configuration
-This tool provides below command line arguments:
+### Homebrew
+This project can also be installed with [Homebrew](https://brew.sh/):
+```shell
+$ brew tap bilalcaliskan/tap
+$ brew install bilalcaliskan/tap/s3-substring-finder
 ```
-Flags:
-      --accessKey string        access key credential to access S3 bucket (default "")
-      --bucketName string       name of the target bucket on S3 (default "")
-      --fileExtensions string   comma separated list of file extensions to search on S3 bucket (ex: txt,json) (default "txt")
-  -h, --help                    help for s3-substring-finder
-      --region string           region of the target bucket on S3 (default "")
-      --secretKey string        secret key credential to access S3 bucket (default "")
-      --substring string        substring to find on txt files on target bucket (default "")
+
+Then similar to binary method, you can run it by calling below command:
+```shell
+$ s3-substring-finder --accessKey asdasfasfasfasfasfas --secretKey asdasfasfasfasfasfas --bucketName demo-bucket --region us-east-2 --substring "catch me if you can"
 ```
 
 ## Development
