@@ -3,6 +3,8 @@ package cmd
 import (
 	"os"
 
+	"github.com/bilalcaliskan/s3-substring-finder/internal/version"
+
 	"github.com/aws/aws-sdk-go/service/s3"
 	"github.com/bilalcaliskan/s3-substring-finder/internal/aws"
 	"github.com/bilalcaliskan/s3-substring-finder/internal/logging"
@@ -12,9 +14,9 @@ import (
 )
 
 var (
-	opts       *options.S3SubstringFinderOptions
-	logger     *zap.Logger
-	GitVersion string
+	opts   *options.S3SubstringFinderOptions
+	logger *zap.Logger
+	ver    = version.Get()
 )
 
 func init() {
@@ -47,12 +49,20 @@ func init() {
 var rootCmd = &cobra.Command{
 	Use:     "s3-substring-finder",
 	Short:   "Substring finder in files on a S3 bucket",
-	Version: GitVersion,
+	Version: ver.GitVersion,
 	Long:    `This tool searches the specific substring in files on AWS S3 and returns the file names`,
 	Run: func(cmd *cobra.Command, args []string) {
 		if opts.VerboseLog {
 			logging.Atomic.SetLevel(zap.DebugLevel)
 		}
+
+		logger.Info("s3-substring-finder is started",
+			zap.String("appVersion", ver.GitVersion),
+			zap.String("goVersion", ver.GoVersion),
+			zap.String("goOS", ver.GoOs),
+			zap.String("goArch", ver.GoArch),
+			zap.String("gitCommit", ver.GitCommit),
+			zap.String("buildDate", ver.BuildDate))
 
 		sess, err := aws.CreateSession(opts)
 		if err != nil {
