@@ -32,11 +32,11 @@ func GetS3SubstringFinderOptions() *S3SubstringFinderOptions {
 	return s3SubstringFinderOptions
 }
 
-func (opts *S3SubstringFinderOptions) SetAccessCredentialsFromEnv(cmd *cobra.Command) {
+func (opts *S3SubstringFinderOptions) SetAccessCredentialsFromEnv(cmd *cobra.Command) error {
 	viper.AutomaticEnv()
 	viper.SetEnvPrefix("aws")
 	if err := viper.BindEnv("access_key", "secret_key", "bucket_name", "region"); err != nil {
-		fmt.Println(err)
+		return err
 	}
 
 	if accessKey := viper.Get("access_key"); accessKey != nil {
@@ -62,4 +62,6 @@ func (opts *S3SubstringFinderOptions) SetAccessCredentialsFromEnv(cmd *cobra.Com
 	} else {
 		_ = cmd.MarkFlagRequired("region")
 	}
+
+	return nil
 }
