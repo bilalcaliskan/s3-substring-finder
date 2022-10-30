@@ -1,5 +1,12 @@
 package options
 
+import (
+	"fmt"
+
+	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
+)
+
 var s3SubstringFinderOptions = &S3SubstringFinderOptions{}
 
 // S3SubstringFinderOptions contains frequent command line and application options.
@@ -23,4 +30,44 @@ type S3SubstringFinderOptions struct {
 // GetS3SubstringFinderOptions returns the pointer of S3SubstringFinderOptions
 func GetS3SubstringFinderOptions() *S3SubstringFinderOptions {
 	return s3SubstringFinderOptions
+}
+
+func (opts *S3SubstringFinderOptions) GetAccessCredentialsFromEnv(cmd *cobra.Command) {
+	viper.AutomaticEnv()
+	viper.SetEnvPrefix("aws")
+	if err := viper.BindEnv("access_key", "secret_key", "bucket_name", "region"); err != nil {
+		fmt.Println(err)
+	}
+
+	if accessKey := viper.Get("access_key"); accessKey != nil {
+		fmt.Println("env access_key found, setting it like that")
+		opts.AccessKey = fmt.Sprintf("%v", accessKey)
+	} else {
+		fmt.Println("env access_key not found, will try command line flag")
+		_ = cmd.MarkFlagRequired("accessKey")
+	}
+
+	if secretKey := viper.Get("secret_key"); secretKey != nil {
+		fmt.Println("env secret_key found, setting it like that")
+		opts.SecretKey = fmt.Sprintf("%v", secretKey)
+	} else {
+		fmt.Println("env secret_key not found, will try command line flag")
+		_ = cmd.MarkFlagRequired("secretKey")
+	}
+
+	if bucketName := viper.Get("bucket_name"); bucketName != nil {
+		fmt.Println("env bucket_name found, setting it like that")
+		opts.BucketName = fmt.Sprintf("%v", bucketName)
+	} else {
+		fmt.Println("env bucket_name not found, will try command line flag")
+		_ = cmd.MarkFlagRequired("bucketName")
+	}
+
+	if region := viper.Get("region"); region != nil {
+		fmt.Println("env region found, setting it like that")
+		opts.Region = fmt.Sprintf("%v", region)
+	} else {
+		fmt.Println("env region not found, will try command line flag")
+		_ = cmd.MarkFlagRequired("region")
+	}
 }

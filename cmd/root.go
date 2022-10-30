@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"fmt"
 	"os"
 
 	"github.com/bilalcaliskan/s3-substring-finder/internal/version"
@@ -10,6 +11,7 @@ import (
 	"github.com/bilalcaliskan/s3-substring-finder/internal/logging"
 	"github.com/bilalcaliskan/s3-substring-finder/internal/options"
 	"github.com/spf13/cobra"
+
 	"go.uber.org/zap"
 )
 
@@ -23,26 +25,21 @@ func init() {
 	opts = options.GetS3SubstringFinderOptions()
 	logger = logging.GetLogger()
 	rootCmd.Flags().StringVarP(&opts.BucketName, "bucketName", "", "",
-		"name of the target bucket on S3 (default \"\")")
+		"name of the target bucket on S3")
 	rootCmd.Flags().StringVarP(&opts.AccessKey, "accessKey", "", "",
-		"access key credential to access S3 bucket (default \"\")")
+		"access key credential to access S3 bucket")
 	rootCmd.Flags().StringVarP(&opts.SecretKey, "secretKey", "", "",
-		"secret key credential to access S3 bucket (default \"\")")
+		"secret key credential to access S3 bucket")
 	rootCmd.Flags().StringVarP(&opts.Region, "region", "", "",
-		"region of the target bucket on S3 (default \"\")")
+		"region of the target bucket on S3")
 	rootCmd.Flags().StringVarP(&opts.Substring, "substring", "", "",
-		"substring to find on txt files on target bucket (default \"\")")
+		"substring to find on txt files on target bucket")
 	rootCmd.Flags().StringVarP(&opts.FileExtensions, "fileExtensions", "", "txt",
 		"comma separated list of file extensions to search on S3 bucket")
 	rootCmd.Flags().BoolVarP(&opts.VerboseLog, "verbose", "v", false,
 		"verbose output of the logging library (default false)")
 
-	// set required flags as required
-	_ = rootCmd.MarkFlagRequired("accessKey")
-	_ = rootCmd.MarkFlagRequired("secretKey")
-	_ = rootCmd.MarkFlagRequired("bucketName")
-	_ = rootCmd.MarkFlagRequired("substring")
-	_ = rootCmd.MarkFlagRequired("region")
+	opts.GetAccessCredentialsFromEnv(rootCmd)
 }
 
 // rootCmd represents the base command when called without any subcommands
@@ -55,6 +52,11 @@ var rootCmd = &cobra.Command{
 		if opts.VerboseLog {
 			logging.Atomic.SetLevel(zap.DebugLevel)
 		}
+
+		fmt.Println(opts.AccessKey)
+		fmt.Println(opts.SecretKey)
+		fmt.Println(opts.BucketName)
+		fmt.Println(opts.Region)
 
 		logger.Info("s3-substring-finder is started",
 			zap.String("appVersion", ver.GitVersion),
