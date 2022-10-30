@@ -33,7 +33,10 @@ func TestS3SubstringFinderOptions_GetAccessCredentialsFromEnv(t *testing.T) {
 		t.Run(tc.caseName, func(t *testing.T) {
 			opts := GetS3SubstringFinderOptions()
 			_ = os.Setenv(tc.envName, tc.envValue)
-			opts.SetAccessCredentialsFromEnv(rootCmd)
+			if err := opts.SetAccessCredentialsFromEnv(rootCmd); err != nil {
+				t.Error(err)
+				return
+			}
 			assert.Equal(t, opts.AccessKey, tc.envValue)
 			_ = os.Unsetenv(tc.envName)
 		})
