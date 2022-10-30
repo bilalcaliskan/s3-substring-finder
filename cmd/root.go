@@ -38,7 +38,7 @@ func init() {
 	rootCmd.Flags().BoolVarP(&opts.VerboseLog, "verbose", "v", false,
 		"verbose output of the logging library (default false)")
 
-	opts.GetAccessCredentialsFromEnv(rootCmd)
+	opts.SetAccessCredentialsFromEnv(rootCmd)
 }
 
 // rootCmd represents the base command when called without any subcommands

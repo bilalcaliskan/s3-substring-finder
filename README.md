@@ -13,7 +13,7 @@
 This tool gets the **AWS S3** credentials from user as input and also gets a specific substring to search across the files with specified extensions with **--fileExtensions** flag in a bucket.
 Then prints the file names that contains provided substring.
 
-You can provide access credentials to AWS with below environment variables or CLI flags. Keep in mind that command line flags
+You can provide access credentials of your AWS account with below environment variables or CLI flags. Keep in mind that command line flags
 will override environment variables if you set both of them:
 ```
 "--accessKey" CLI flag or "AWS_ACCESS_KEY" environment variable
