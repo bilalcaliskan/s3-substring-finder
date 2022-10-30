@@ -13,6 +13,15 @@
 This tool gets the **AWS S3** credentials from user as input and also gets a specific substring to search across the files with specified extensions with **--fileExtensions** flag in a bucket.
 Then prints the file names that contains provided substring.
 
+You can provide access credentials to AWS with below environment variables or CLI flags. Keep in mind that command line flags
+will override environment variables if you set both of them:
+```
+"--accessKey" CLI flag or "AWS_ACCESS_KEY" environment variable
+"--secretKey" CLI flag or "AWS_SECRET_KEY" environment variable
+"--region" CLI flag or "AWS_REGION" environment variable
+"--bucketName" CLI flag or "AWS_BUCKET_NAME" environment variable
+```
+
 ## Configuration
 This tool provides below command line arguments:
 ```
@@ -62,4 +71,3 @@ $ pre-commit install -c build/ci/.pre-commit-config.yaml
 
 ## License
 Apache License 2.0
-
