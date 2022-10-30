@@ -1,7 +1,6 @@
 package cmd
 
 import (
-	"fmt"
 	"os"
 
 	"github.com/bilalcaliskan/s3-substring-finder/internal/version"
@@ -52,11 +51,6 @@ var rootCmd = &cobra.Command{
 		if opts.VerboseLog {
 			logging.Atomic.SetLevel(zap.DebugLevel)
 		}
-
-		fmt.Println(opts.AccessKey)
-		fmt.Println(opts.SecretKey)
-		fmt.Println(opts.BucketName)
-		fmt.Println(opts.Region)
 
 		logger.Info("s3-substring-finder is started",
 			zap.String("appVersion", ver.GitVersion),
