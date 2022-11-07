@@ -5,7 +5,7 @@ go 1.19
 require (
 	github.com/aws/aws-sdk-go v1.44.130
 	github.com/dimiro1/banner v1.1.0
-	github.com/schollz/progressbar/v3 v3.12.0
+	github.com/schollz/progressbar/v3 v3.12.1
 	github.com/spf13/cobra v1.6.1
 	github.com/spf13/viper v1.13.0
 	github.com/stretchr/testify v1.8.1
