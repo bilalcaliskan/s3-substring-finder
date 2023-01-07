@@ -2,6 +2,9 @@ package cmd
 
 import (
 	"os"
+	"strings"
+
+	"github.com/dimiro1/banner"
 
 	"github.com/bilalcaliskan/s3-substring-finder/internal/version"
 
@@ -52,6 +55,11 @@ var rootCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		if opts.VerboseLog {
 			logging.Atomic.SetLevel(zap.DebugLevel)
+		}
+
+		if _, err := os.Stat("build/ci/banner.txt"); err == nil {
+			bannerBytes, _ := os.ReadFile("build/ci/banner.txt")
+			banner.Init(os.Stdout, true, false, strings.NewReader(string(bannerBytes)))
 		}
 
 		logger.Info("s3-substring-finder is started",
