@@ -25,15 +25,21 @@ will override environment variables if you set both of them:
 ## Configuration
 This tool provides below command line arguments:
 ```
+This tool searches the specific substring in files on AWS S3 and returns the file names
+
+Usage:
+  s3-substring-finder [flags]
+
 Flags:
-      --accessKey string        access key credential to access S3 bucket (default "")
-      --bucketName string       name of the target bucket on S3 (default "")
+      --accessKey string        access key credential to access S3 bucket
+      --bucketName string       name of the target bucket on S3
       --fileExtensions string   comma separated list of file extensions to search on S3 bucket (default "txt")
   -h, --help                    help for s3-substring-finder
-      --region string           region of the target bucket on S3 (default "")
-      --secretKey string        secret key credential to access S3 bucket (default "")
-      --substring string        substring to find on txt files on target bucket (default "")
+      --region string           region of the target bucket on S3
+      --secretKey string        secret key credential to access S3 bucket
+      --substring string        substring to find on txt files on target bucket
   -v, --verbose                 verbose output of the logging library (default false)
+      --version                 version for s3-substring-finder
 ```
 
 ## Installation
