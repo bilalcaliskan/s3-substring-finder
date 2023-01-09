@@ -7,7 +7,7 @@ permissions:
 
 on:
   schedule:
-    - cron: "05 * * * *"
+    - cron: "15 * * * *"
 
 jobs:
   update-dep:
