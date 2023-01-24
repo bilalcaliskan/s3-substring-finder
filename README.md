@@ -25,8 +25,6 @@ will override environment variables if you set both of them:
 ## Configuration
 This tool provides below command line arguments:
 ```
-This tool searches the specific substring in files on AWS S3 and returns the file names
-
 Usage:
   s3-substring-finder [flags]
 
