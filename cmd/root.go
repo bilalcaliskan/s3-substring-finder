@@ -38,7 +38,7 @@ func init() {
 		"substring to find on txt files on target bucket (default \"\")")
 	rootCmd.Flags().StringVarP(&opts.FileExtensions, "fileExtensions", "", "txt",
 		"comma separated list of file extensions to search on S3 bucket")
-	rootCmd.Flags().BoolVarP(&opts.VerboseLog, "verbose", "v", false,
+	rootCmd.Flags().BoolVarP(&opts.VerboseLog, "verbose", "", false,
 		"verbose output of the logging library (default false)")
 
 	if err := opts.SetAccessCredentialsFromEnv(rootCmd); err != nil {
