@@ -27,15 +27,15 @@ func init() {
 	opts = options.GetS3SubstringFinderOptions()
 	logger = logging.GetLogger()
 	rootCmd.Flags().StringVarP(&opts.BucketName, "bucketName", "", "",
-		"name of the target bucket on S3")
+		"name of the target bucket on S3 (default \"\")")
 	rootCmd.Flags().StringVarP(&opts.AccessKey, "accessKey", "", "",
-		"access key credential to access S3 bucket")
+		"access key credential to access S3 bucket (default \"\")")
 	rootCmd.Flags().StringVarP(&opts.SecretKey, "secretKey", "", "",
-		"secret key credential to access S3 bucket")
+		"secret key credential to access S3 bucket (default \"\")")
 	rootCmd.Flags().StringVarP(&opts.Region, "region", "", "",
-		"region of the target bucket on S3")
+		"region of the target bucket on S3 (default \"\")")
 	rootCmd.Flags().StringVarP(&opts.Substring, "substring", "", "",
-		"substring to find on txt files on target bucket")
+		"substring to find on txt files on target bucket (default \"\")")
 	rootCmd.Flags().StringVarP(&opts.FileExtensions, "fileExtensions", "", "txt",
 		"comma separated list of file extensions to search on S3 bucket")
 	rootCmd.Flags().BoolVarP(&opts.VerboseLog, "verbose", "v", false,

@@ -29,13 +29,13 @@ Usage:
   s3-substring-finder [flags]
 
 Flags:
-      --accessKey string        access key credential to access S3 bucket
-      --bucketName string       name of the target bucket on S3
+      --accessKey string        access key credential to access S3 bucket (default "")
+      --bucketName string       name of the target bucket on S3 (default "")
       --fileExtensions string   comma separated list of file extensions to search on S3 bucket (default "txt")
   -h, --help                    help for s3-substring-finder
-      --region string           region of the target bucket on S3
-      --secretKey string        secret key credential to access S3 bucket
-      --substring string        substring to find on txt files on target bucket
+      --region string           region of the target bucket on S3 (default "")
+      --secretKey string        secret key credential to access S3 bucket (default "")
+      --substring string        substring to find on txt files on target bucket (default "")
   -v, --verbose                 verbose output of the logging library (default false)
       --version                 version for s3-substring-finder
 ```
