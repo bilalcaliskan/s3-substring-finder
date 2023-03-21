@@ -12,7 +12,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
       - name: Install Go
-        uses: actions/setup-go@v3
+        uses: actions/setup-go@v4
         with:
           go-version-file: "go.mod"
           cache: true
@@ -27,7 +27,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
       - name: Install Go
-        uses: actions/setup-go@v3
+        uses: actions/setup-go@v4
         with:
           go-version-file: "go.mod"
           cache: true
@@ -45,7 +45,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
       - name: Install Go
-        uses: actions/setup-go@v3
+        uses: actions/setup-go@v4
         with:
           go-version-file: "go.mod"
           cache: true
@@ -86,7 +86,7 @@ jobs:
         with:
           fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
       - name: Install Go
-        uses: actions/setup-go@v3
+        uses: actions/setup-go@v4
         with:
           go-version-file: "go.mod"
           cache: true
@@ -119,7 +119,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
       - name: Install Go
-        uses: actions/setup-go@v3
+        uses: actions/setup-go@v4
         with:
           go-version-file: "go.mod"
           cache: true
@@ -160,7 +160,7 @@ jobs:
           echo "::set-output name=build_time::$(date -u +'%m-%d-%YT%H:%M:%SZ')"
           echo "::set-output name=sha_short::$(git rev-parse --short HEAD)"
       - name: Install Go
-        uses: actions/setup-go@v3
+        uses: actions/setup-go@v4
         with:
           go-version-file: "go.mod"
           cache: true
