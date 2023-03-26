@@ -4,10 +4,12 @@ import (
 	"os"
 	"testing"
 
+	"github.com/bilalcaliskan/s3-substring-finder/cmd/root/options"
+	"github.com/bilalcaliskan/s3-substring-finder/internal/logging"
+
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/service/s3"
 	"github.com/aws/aws-sdk-go/service/s3/s3iface"
-	"github.com/bilalcaliskan/s3-substring-finder/internal/options"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -64,9 +66,9 @@ func TestFind(t *testing.T) {
 			StorageClass: aws.String("STANDARD"),
 		},
 	}
-	opts := options.GetS3SubstringFinderOptions()
+	opts := options.GetRootOptions()
 	opts.Substring = "akqASmLLlK"
-	result, errs := Find(mockSvc, opts)
+	result, errs := Find(mockSvc, opts, logging.GetLogger(opts))
 	assert.NotNil(t, result)
 	assert.Empty(t, errs)
 }
@@ -80,8 +82,8 @@ func TestFindWrongFilePath(t *testing.T) {
 			StorageClass: aws.String("STANDARD"),
 		},
 	}
-	opts := options.GetS3SubstringFinderOptions()
-	res, err := Find(mockSvc, opts)
+	opts := options.GetRootOptions()
+	res, err := Find(mockSvc, opts, logging.GetLogger(opts))
 	assert.Nil(t, res)
 	assert.NotEmpty(t, err)
 }
