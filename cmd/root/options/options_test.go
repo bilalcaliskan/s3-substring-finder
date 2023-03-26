@@ -9,15 +9,15 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-// TestGetS3SubstringFinderOptions function tests if GetS3SubstringFinderOptions function running properly
-func TestGetS3SubstringFinderOptions(t *testing.T) {
-	t.Log("fetching default options.S3SubstringFinderOptions")
-	opts := GetS3SubstringFinderOptions()
+// TestGetRootOptions function tests if GetRootOptions function running properly
+func TestGetRootOptions(t *testing.T) {
+	t.Log("fetching default options.RootOptions")
+	opts := GetRootOptions()
 	assert.NotNil(t, opts)
-	t.Logf("fetched default options.S3SubstringFinderOptions, %v\n", opts)
+	t.Logf("fetched default options.RootOptions, %v\n", opts)
 }
 
-func TestS3SubstringFinderOptions_GetAccessCredentialsFromEnv(t *testing.T) {
+func TestRootOptions_GetAccessCredentialsFromEnv(t *testing.T) {
 	rootCmd := &cobra.Command{}
 
 	cases := []struct {
@@ -31,7 +31,7 @@ func TestS3SubstringFinderOptions_GetAccessCredentialsFromEnv(t *testing.T) {
 
 	for _, tc := range cases {
 		t.Run(tc.caseName, func(t *testing.T) {
-			opts := GetS3SubstringFinderOptions()
+			opts := GetRootOptions()
 			_ = os.Setenv(tc.envName, tc.envValue)
 			if err := opts.SetAccessCredentialsFromEnv(rootCmd); err != nil {
 				t.Error(err)

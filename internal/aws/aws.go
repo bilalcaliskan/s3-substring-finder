@@ -5,17 +5,17 @@ import (
 	"strings"
 	"sync"
 
+	"github.com/bilalcaliskan/s3-substring-finder/cmd/root/options"
+	"github.com/rs/zerolog"
+
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/service/s3"
 	"github.com/aws/aws-sdk-go/service/s3/s3iface"
-	"github.com/bilalcaliskan/s3-substring-finder/internal/logging"
-	"github.com/bilalcaliskan/s3-substring-finder/internal/options"
 	"github.com/schollz/progressbar/v3"
-	"go.uber.org/zap"
 )
 
 // Find does the heavy lifting, communicates with the S3 and finds the files
-func Find(svc s3iface.S3API, opts *options.S3SubstringFinderOptions) ([]string, []error) {
+func Find(svc s3iface.S3API, opts *options.RootOptions, logger zerolog.Logger) ([]string, []error) {
 	var errors []error
 	var matchedFiles []string
 	mu := &sync.Mutex{}
@@ -38,7 +38,7 @@ func Find(svc s3iface.S3API, opts *options.S3SubstringFinderOptions) ([]string, 
 	for _, v := range listResult.Contents {
 		for _, y := range extensions {
 			if strings.HasSuffix(*v.Key, y) {
-				logging.GetLogger().Info("found file", zap.String("name", *v.Key))
+				logger.Debug().Str("fileName", *v.Key).Msg("found file")
 				resultArr = append(resultArr, v)
 			}
 		}

@@ -7,10 +7,10 @@ import (
 	"github.com/spf13/viper"
 )
 
-var s3SubstringFinderOptions = &S3SubstringFinderOptions{}
+var rootOptions = &RootOptions{}
 
-// S3SubstringFinderOptions contains frequent command line and application options.
-type S3SubstringFinderOptions struct {
+// RootOptions contains frequent command line and application options.
+type RootOptions struct {
 	// AccessKey is the access key credentials for accessing AWS over client
 	AccessKey string
 	// SecretKey is the secret key credentials for accessing AWS over client
@@ -27,12 +27,12 @@ type S3SubstringFinderOptions struct {
 	VerboseLog bool
 }
 
-// GetS3SubstringFinderOptions returns the pointer of S3SubstringFinderOptions
-func GetS3SubstringFinderOptions() *S3SubstringFinderOptions {
-	return s3SubstringFinderOptions
+// GetRootOptions returns the pointer of S3SubstringFinderOptions
+func GetRootOptions() *RootOptions {
+	return rootOptions
 }
 
-func (opts *S3SubstringFinderOptions) SetAccessCredentialsFromEnv(cmd *cobra.Command) error {
+func (opts *RootOptions) SetAccessCredentialsFromEnv(cmd *cobra.Command) error {
 	viper.AutomaticEnv()
 	viper.SetEnvPrefix("aws")
 	if err := viper.BindEnv("access_key", "secret_key", "bucket_name", "region"); err != nil {
@@ -64,4 +64,21 @@ func (opts *S3SubstringFinderOptions) SetAccessCredentialsFromEnv(cmd *cobra.Com
 	}
 
 	return nil
+}
+
+func (opts *RootOptions) InitFlags(cmd *cobra.Command) {
+	cmd.Flags().StringVarP(&opts.BucketName, "bucketName", "", "",
+		"name of the target bucket on S3 (default \"\")")
+	cmd.Flags().StringVarP(&opts.AccessKey, "accessKey", "", "",
+		"access key credential to access S3 bucket (default \"\")")
+	cmd.Flags().StringVarP(&opts.SecretKey, "secretKey", "", "",
+		"secret key credential to access S3 bucket (default \"\")")
+	cmd.Flags().StringVarP(&opts.Region, "region", "", "",
+		"region of the target bucket on S3 (default \"\")")
+	cmd.Flags().StringVarP(&opts.Substring, "substring", "", "",
+		"substring to find on txt files on target bucket (default \"\")")
+	cmd.Flags().StringVarP(&opts.FileExtensions, "fileExtensions", "", "txt",
+		"comma separated list of file extensions to search on S3 bucket")
+	cmd.Flags().BoolVarP(&opts.VerboseLog, "verbose", "", false,
+		"verbose output of the logging library (default false)")
 }

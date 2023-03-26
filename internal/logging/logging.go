@@ -3,30 +3,31 @@ package logging
 import (
 	"os"
 
-	"go.uber.org/zap"
-	"go.uber.org/zap/zapcore"
+	"github.com/bilalcaliskan/s3-substring-finder/cmd/root/options"
+
+	"github.com/rs/zerolog"
 )
 
 var (
-	logger *zap.Logger
-	Atomic zap.AtomicLevel
+	logger zerolog.Logger
+	Level  = zerolog.InfoLevel
 )
 
 func init() {
-	Atomic = zap.NewAtomicLevel()
-	Atomic.SetLevel(zap.InfoLevel)
-	logger = zap.New(zapcore.NewTee(zapcore.NewCore(zapcore.NewJSONEncoder(zapcore.EncoderConfig{
-		MessageKey:   "message",
-		LevelKey:     "severity",
-		EncodeLevel:  zapcore.LowercaseLevelEncoder,
-		TimeKey:      "time",
-		EncodeTime:   zapcore.RFC3339TimeEncoder,
-		CallerKey:    "caller",
-		EncodeCaller: zapcore.FullCallerEncoder,
-	}), zapcore.Lock(os.Stdout), Atomic)))
+	consoleWriter := zerolog.ConsoleWriter{Out: os.Stdout}
+	zerolog.TimeFieldFormat = zerolog.TimeFormatUnix
+	logger = zerolog.New(consoleWriter).With().Timestamp().Logger().Level(Level)
 }
 
-// GetLogger returns the shared *zap.Logger
-func GetLogger() *zap.Logger {
+func GetLogger(opts *options.RootOptions) zerolog.Logger {
+	logger = logger.With().
+		Str("bucketName", opts.BucketName).
+		Str("region", opts.Region).
+		Logger()
+
 	return logger
+}
+
+func EnableDebugLogging() {
+	logger = logger.Level(zerolog.DebugLevel)
 }
