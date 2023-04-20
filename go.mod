@@ -3,9 +3,9 @@ module github.com/bilalcaliskan/s3-substring-finder
 go 1.20
 
 require (
-	github.com/aws/aws-sdk-go v1.44.240
+	github.com/aws/aws-sdk-go v1.44.245
 	github.com/dimiro1/banner v1.1.0
-	github.com/rs/zerolog v1.29.0
+	github.com/rs/zerolog v1.29.1
 	github.com/schollz/progressbar/v3 v3.13.1
 	github.com/spf13/cobra v1.7.0
 	github.com/spf13/viper v1.15.0
